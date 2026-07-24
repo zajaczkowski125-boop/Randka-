@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zaproszenie na randkę</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-color: #fce4ec;
+            background-image: radial-gradient(#f8bbd0 1px, transparent 1px);
+            background-size: 24px 24px;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            width: 90%;
+            max-width: 420px;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            color: #4a4a4a;
+            font-size: 24px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+            min-height: 60px;
+        }
+
+        .btn {
+            padding: 12px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .btn-yes {
+            background-color: #e91e63;
+            color: white;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+        }
+
+        .btn-yes:hover {
+            background-color: #d81b60;
+            transform: scale(1.05);
+        }
+
+        .btn-no {
+            background-color: #f1f2f6;
+            color: #718093;
+        }
+
+        /* Sekcja kalendarza */
+        .calendar-container, .food-container, .summary-container {
+            display: none;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .day-name {
+            font-size: 12px;
+            color: #b0bec5;
+            font-weight: 600;
+        }
+
+        .day {
+            padding: 10px 0;
+            font-size: 14px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: #374151;
+            transition: background 0.2s;
+        }
+
+        .day:hover {
+            background-color: #fce4ec;
+        }
+
+        .day.selected {
+            background-color: #e91e63;
+            color: white;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .time-slot {
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 13px;
+            cursor: pointer;
+            background: white;
+            color: #4a4a4a;
+            transition: all 0.2s;
+        }
+
+        .time-slot:hover {
+            border-color: #e91e63;
+        }
+
+        .time-slot.selected {
+            background-color: #e91e63;
+            color: white;
+            border-color: #e91e63;
+        }
+
+        /* Wybór jedzenia */
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .food-item {
+            padding: 15px;
+            border: 2px solid #f1f2f6;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .food-item span {
+            font-size: 24px;
+        }
+
+        .food-item:hover {
+            border-color: #f8bbd0;
+        }
+
+        .food-item.selected {
+            border-color: #e91e63;
+            background-color: #fff0f3;
+        }
+
+        /* Podsumowanie */
+        .summary-box {
+            text-align: left;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .summary-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            color: #374151;
+        }
+
+        .footer-note {
+            font-size: 11px;
+            color: #9ca3af;
+            font-style: italic;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div id="step-1" class="step">
+            <h1>🌸 Will you go on a date with me? 🌸</h1>
+            <div class="btn-container">
+                <button class="btn btn-yes" onclick="nextStep(2)">YES 💕</button>
+                <button class="btn btn-no" id="btn-no" onmouseover="moveButton()" onclick="moveButton()">NO 🙈</button>
+            </div>
+        </div>
+
+        <div id="step-2" class="step calendar-container">
+            <h1>So... when are you free? 🐾📅</h1>
+            <div style="font-size: 14px; font-weight: 600; color: #6b7280; margin-bottom: 10px;">Pick a day</div>
+            <div class="calendar-grid">
+                <div class="day-name">Su</div>
+                <div class="day-name">Mo</div>
+                <div class="day-name">Tu</div>
+                <div class="day-name">We</div>
+                <div class="day-name">Th</div>
+                <div class="day-name">Fr</div>
+                <div class="day-name">Sa</div>
+                <div class="day" onclick="selectDay(this)">5</div>
+                <div class="day" onclick="selectDay(this)">6</div>
+                <div class="day" onclick="selectDay(this)">7</div>
+                <div class="day" onclick="selectDay(this)">8</div>
+                <div class="day" onclick="selectDay(this)">9</div>
+                <div class="day" onclick="selectDay(this)">10</div>
+                <div class="day selected" onclick="selectDay(this)">11</div>
+            </div>
+
+            <div style="font-size: 14px; font-weight: 600; color: #6b7280; margin-bottom: 10px;">What time?</div>
+            <div class="time-slots">
+                <div class="time-slot" onclick="selectTime(this)">12:00 PM</div>
+                <div class="time-slot" onclick="selectTime(this)">2:00 PM</div>
+                <div class="time-slot" onclick="selectTime(this)">5:00 PM</div>
+                <div class="time-slot selected" onclick="selectTime(this)">8:00 PM</div>
+            </div>
+
+            <button class="btn btn-yes" onclick="nextStep(3)">Set the date 💕</button>
+        </div>
+
+        <div id="step-3" class="step food-container">
+            <h1>What are we feeling? 🍽️✨</h1>
+            <div class="food-grid">
+                <div class="food-item" onclick="selectFood(this, 'Pizza')"><span>🍕</span>Pizza</div>
+                <div class="food-item" onclick="selectFood(this, 'Sushi')"><span>🍣</span>Sushi</div>
+                <div class="food-item" onclick="selectFood(this, 'Burgers')"><span>🍔</span>Burgers</div>
+                <div class="food-item selected" onclick="selectFood(this, 'Pasta')"><span>🍝</span>Pasta</div>
+            </div>
+            <button class="btn btn-yes" onclick="nextStep(4)">Next 💕</button>
+        </div>
+
+        <div id="step-4" class="step summary-container">
+            <h1 style="color: #e91e63;">YAY!! 💞</h1>
+            <div class="summary-box">
+                <div class="summary-row"><span>📅</span> <b id="summary-date">Saturday, July 11</b></div>
+                <div class="summary-row"><span>⏰</span> <b id="summary-time">8:00 PM</b></div>
+                <div class="summary-row"><span>🍽️</span> <b id="summary-food">Pasta</b></div>
+            </div>
+            <div style="font-size: 16px; font-weight: 600; color: #4a4a4a;">I can't wait to see you! 🌷✨</div>
+            <div class="footer-note">(normal guys send texts, i made a website on Replit. i'm not like other guys xx)</div>
+        </div>
+    </div>
+
+    <script>
+        let selectedDateText = "Saturday, July 11";
+        let selectedTimeText = "8:00 PM";
+        let selectedFoodText = "Pasta";
+
+        function nextStep(stepNumber) {
+            document.querySelectorAll('.step').forEach(el => el.style.display = 'none');
+            if(stepNumber === 4) {
+                document.getElementById('summary-date').innerText = selectedDateText;
+                document.getElementById('summary-time').innerText = selectedTimeText;
+                document.getElementById('summary-food').innerText = selectedFoodText;
+            }
+            document.getElementById('step-' + stepNumber).style.display = 'block';
+        }
+
+        // Efekt uciekającego przycisku "NO"
+        function moveButton() {
+            const btnNo = document.getElementById('btn-no');
+            const x = (Math.random() - 0.5) * 150;
+            const y = (Math.random() - 0.5) * 100;
+            btnNo.style.transform = `translate(${x}px, ${y}px)`;
+        }
+
+        function selectDay(element) {
+            document.querySelectorAll('.day').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedDateText = `July ${element.innerText}`;
+        }
+
+        function selectTime(element) {
+            document.querySelectorAll('.time-slot').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedTimeText = element.innerText;
+        }
+
+        function selectFood(element, foodName) {
+            document.querySelectorAll('.food-item').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedFoodText = foodName;
+        }
+    </script>
+</body>
+</html>
